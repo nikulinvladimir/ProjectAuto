@@ -115,3 +115,4 @@ D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.csproj.CoreCompi
 D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.csproj.CopyComplete
 D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.exe
 D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.pdb
+D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.ViewAuto.resources

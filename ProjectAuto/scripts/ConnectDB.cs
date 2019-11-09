@@ -11,7 +11,6 @@ namespace ProjectAuto
     class ConnectDB
     {
 
-        //SqlConnection SqlConnection;
         string connectString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\Works Projects\ProjectAuto\ProjectAuto\Database.mdf;Integrated Security=True"; 
 
         public List<Automobile> GetAuto()
@@ -76,5 +75,6 @@ namespace ProjectAuto
             }
         }
      
+
     }
 }
