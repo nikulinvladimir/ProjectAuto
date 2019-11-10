@@ -14,6 +14,7 @@ namespace ProjectAuto
     {
         List<string> linkImg;
 
+
         public string GetPage(string link)
         {
             HttpRequest request = new HttpRequest();
@@ -32,12 +33,12 @@ namespace ProjectAuto
 
         }
 
-        public List<Automobile> ParsAutoCatalog(string response)
+        public  List<Automobile> ParsAutoCatalog(string response)
         {
             HtmlParser htmlParser = new HtmlParser();
             var doc = htmlParser.ParseDocument(response);
-
             List<Automobile> product = new List<Automobile>();
+
             linkImg = new List<string>();
 
             foreach (var item in doc.QuerySelectorAll(".catalog-models>>li"))
@@ -45,33 +46,32 @@ namespace ProjectAuto
                 product.Add(new Automobile
                 {
                     nameAuto = item.QuerySelector(".model_item").TextContent,
-                    img = item.QuerySelector("img").GetAttribute("src"),
                     linkAuto = item.QuerySelector(".model_item") == null ? "" : item.QuerySelector(".model_item").GetAttribute("href"),
                     catalogYears = item.QuerySelector("b>u") == null ? "" : item.QuerySelector("b>u").TextContent,
                     productInStock = item.QuerySelector("b>ins") == null ? "" : item.QuerySelector("b>ins").TextContent,
                     model = item.QuerySelector("b>small") == null ? "" : item.QuerySelector("b>small").TextContent,
+                    img = DownloadFileAsync(item.QuerySelector("img").GetAttribute("src"))
 
                 });
-                linkImg.Add(item.QuerySelector("img").GetAttribute("src"));
+
+                //linkImg.Add(item.QuerySelector("img").GetAttribute("src"));
             }
             //DownloadFileAsync().GetAwaiter();
             return product;
 
         }
-      
-        async Task DownloadFileAsync()
+
+        public  string DownloadFileAsync(string s)
         {
-            
-            foreach (var item in linkImg)
-            {
-                WebClient client = new WebClient();
-                client.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0";
-                client.Headers["Accept-Encoding"] = "gzip, deflate, br";
-                client.Headers["Accept"] = "image/webp,*/*";
-                Thread.Sleep(1000);
-                await client.DownloadFileTaskAsync(new Uri(item), @"D:\Works Projects\ProjectAuto\ProjectAuto\scripts\imageAuto\" + item.Remove(0, item.Length - 6)); 
-            }
+            WebClient client = new WebClient();
+            client.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0";
+            client.Headers["Accept-Encoding"] = "gzip, deflate, br";
+            client.Headers["Accept"] = "image/webp,*/*";
+             client.DownloadFileTaskAsync(new Uri(s), @"D:\Works Projects\ProjectAuto\ProjectAuto\imageAuto\" + s.Remove(0, s.Length - 6));
+            return @"D:\Works Projects\ProjectAuto\ProjectAuto\scripts\imageAuto\" + s.Remove(0, s.Length - 6);
 
         }
+ 
+
     }
 }

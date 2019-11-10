@@ -106,9 +106,7 @@ D:\Works Projects\ProjectAuto\ProjectAuto\bin\Debug\System.Text.Encoding.CodePag
 D:\Works Projects\ProjectAuto\ProjectAuto\bin\Debug\AngleSharp.xml
 D:\Works Projects\ProjectAuto\ProjectAuto\bin\Debug\Leaf.xNet.xml
 D:\Works Projects\ProjectAuto\ProjectAuto\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
-D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.csprojAssemblyReference.cache
 D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.exe.config
-D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.Form1.resources
 D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.Properties.Resources.resources
 D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.csproj.GenerateResource.cache
 D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.csproj.CoreCompileInputs.cache
@@ -116,3 +114,5 @@ D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.csproj.CopyCompl
 D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.exe
 D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.pdb
 D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.ViewAuto.resources
+D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.csprojAssemblyReference.cache
+D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.Form2.resources

@@ -60,18 +60,20 @@ namespace ProjectAuto
 
             using (SqlConnection connection = new SqlConnection(connectString))
             {
-                SqlCommand command = new SqlCommand("INSERT INTO CatalogAutomobile (name,catalogId,catalogYears,productInStock,model)" +
-                    "VALUES (@name, @CatalogId, @CatalogYears, @productInStock, @model)", connection);
+                SqlCommand command = new SqlCommand("INSERT INTO CatalogAutomobile (name,catalogId,catalogYears,productInStock,model,image)" +
+                    "VALUES (@name, @CatalogId, @CatalogYears, @productInStock, @model,@image)", connection);
 
-                command.Parameters.AddWithValue("name",auto.nameAuto.ToString());
+                command.Parameters.AddWithValue("name", auto.nameAuto.ToString());
                 command.Parameters.AddWithValue("CatalogId", 1);
                 command.Parameters.AddWithValue("CatalogYears", auto.catalogYears.ToString());
                 command.Parameters.AddWithValue("model", auto.model.ToString());
                 command.Parameters.AddWithValue("productInStock", auto.productInStock.ToString());
+                command.Parameters.AddWithValue("image", auto.img.ToString());
 
                 connection.Open();
                 command.ExecuteNonQuery();
-                connection.Close();     
+                connection.Close();
+
             }
         }
      

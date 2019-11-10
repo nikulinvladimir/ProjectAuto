@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -22,33 +23,45 @@ namespace ProjectAuto
             InitializeComponent();
             DB = new ConnectDB();
             site = new SiteLink();
-
+            
         }
-
+        
 
         void Pars()
         {
             string response = site.GetPage(link);
+
             automobiles = new List<Automobile>();
+
             automobiles = site.ParsAutoCatalog(response);
         }
 
+        void RunFormView()
+        {
+            ViewAuto viewAuto = new ViewAuto();
+            viewAuto.ShowDialog();
+        }
 
-
-        private void button1_Click(object sender, EventArgs e)
+        private  void button1_Click(object sender, EventArgs e)
         {
             Pars();
 
             foreach (var item in automobiles)
             {
-                //DB.SetAuto(item);
+                //DB.SetAuto(item);             
             }
 
-            foreach (var automobile in DB.GetAuto())
-            {
-                //richTextBox1.AppendText ($"\n Название " + automobile.nameAuto + $"\n № каталога " + automobile.linkAuto + $"\n Год каталога " + automobile.catalogYears + $"\n № Модели " + automobile.model + $"\n Запчастей в наличии " + automobile.productInStock + $"\n   "); 
-            }  
+            //foreach (var automobile in DB.GetAuto())
+            //{
+            //    richTextBox1.AppendText ($"\n Название " + automobile.nameAuto + $"\n № каталога " + automobile.linkAuto + $"\n Год каталога " + automobile.catalogYears + $"\n № Модели " + automobile.model + $"\n Запчастей в наличии " + automobile.productInStock + $"\n " + automobile.img ); 
+            //}  
 
+        }
+
+        private void автокаталогToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Thread thread = new Thread(RunFormView);
+            thread.Start();
         }
     }
 }

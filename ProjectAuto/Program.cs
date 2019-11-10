@@ -16,7 +16,7 @@ namespace ProjectAuto
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ViewAuto());
+            Application.Run(new Form2());
         }
     }
 }
