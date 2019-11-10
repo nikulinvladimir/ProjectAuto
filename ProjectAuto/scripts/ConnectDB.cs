@@ -30,11 +30,13 @@ namespace ProjectAuto
                     {
                         Automobile auto = new Automobile()
                         {
+                            img = reader[6].ToString(),
                             nameAuto = reader[1].ToString(),
                             linkAuto = reader[2].ToString(),
                             catalogYears = reader[3].ToString(),
                             model = reader[5].ToString(),
                             productInStock = reader[4].ToString()
+                            
                         };
                         automobiles.Add(auto);
                     }   

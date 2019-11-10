@@ -35,22 +35,6 @@ namespace ProjectAuto
 
 
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Pars();
-
-            foreach (var item in automobiles)
-            {
-                //DB.SetAuto(item);
-            }
-
-            //foreach (var automobile in DB.GetAuto())
-            //{
-            //    richTextBox1.AppendText($"\n Название " + automobile.nameAuto + $"\n № каталога " + automobile.linkAuto + $"\n Год каталога " + automobile.catalogYears + $"\n № Модели " + automobile.model + $"\n Запчастей в наличии " + automobile.productInStock + $"\n   ");
-            //}
-        }
-
-
         void RunFormView()
         {
             ViewAuto viewAuto = new ViewAuto();
@@ -62,6 +46,21 @@ namespace ProjectAuto
         {
             Thread thread = new Thread(RunFormView);
             thread.Start();
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            Pars();
+
+            foreach (var item in automobiles)
+            {
+                DB.SetAuto(item);
+            }
+
+            //foreach (var automobile in DB.GetAuto())
+            //{
+            //    richTextBox1.AppendText($"\n Название " + automobile.nameAuto + $"\n № каталога " + automobile.linkAuto + $"\n Год каталога " + automobile.catalogYears + $"\n № Модели " + automobile.model + $"\n Запчастей в наличии " + automobile.productInStock + $"\n   ");
+            //}
         }
     }
 }

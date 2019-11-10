@@ -68,7 +68,7 @@ namespace ProjectAuto
             client.Headers["Accept-Encoding"] = "gzip, deflate, br";
             client.Headers["Accept"] = "image/webp,*/*";
              client.DownloadFileTaskAsync(new Uri(s), @"D:\Works Projects\ProjectAuto\ProjectAuto\imageAuto\" + s.Remove(0, s.Length - 6));
-            return @"D:\Works Projects\ProjectAuto\ProjectAuto\scripts\imageAuto\" + s.Remove(0, s.Length - 6);
+            return @"D:\Works Projects\ProjectAuto\ProjectAuto\imageAuto\" + s.Remove(0, s.Length - 6);
 
         }
  
