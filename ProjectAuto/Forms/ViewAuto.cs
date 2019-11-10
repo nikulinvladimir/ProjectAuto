@@ -12,25 +12,41 @@ namespace ProjectAuto
 {
     public partial class ViewAuto : Form
     {
-        
+        List<Automobile> ListAuto;
+        Automobile auto;
+        ConnectDB connect;
         public ViewAuto()
         {
             InitializeComponent();
 
-            ConnectDB connect = new ConnectDB();
-            Automobile auto = new Automobile();
-            List<Automobile> ListAuto = new List<Automobile>();
+            //ссылка на базу данных
+             connect = new ConnectDB();
+
+            //сылка на авто
+             auto = new Automobile();
+
+            // создание списка авто
+             ListAuto = new List<Automobile>();
+
+            // заполнение списка автомобилями из базы данных
             ListAuto = connect.GetAuto();
 
+            DinemicCreatPanelView();
+
+        }
+        // динамическо содание блоков из списка авто
+        void DinemicCreatPanelView()
+        {
             CreadFlowPanel();
-            
+
             for (int i = 0; i < ListAuto.Count; i++)
             {
-                CreatView(new Panel(), "Panel"+i, ListAuto[i]);
+                CreatView(new Panel(), "Panel" + i, ListAuto[i]);
             }
 
         }
 
+        // создание скролящуюсь панель
         void CreadFlowPanel()
         {
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
@@ -44,7 +60,7 @@ namespace ProjectAuto
             this.flowLayoutPanel1.TabIndex = 9;
 
         }
-
+        // шаблон из блока информации авто
         void CreatView(Panel panel, string namePanel, Automobile auto)
         {
             ///Добовление панелей на flowPanel

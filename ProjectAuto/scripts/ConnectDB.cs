@@ -13,6 +13,7 @@ namespace ProjectAuto
 
         string connectString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\Works Projects\ProjectAuto\ProjectAuto\Database.mdf;Integrated Security=True"; 
 
+        // Добовление в базу данных информацию о авто
         public List<Automobile> GetAuto()
         {
             List<Automobile> automobiles = new List<Automobile>();
@@ -57,6 +58,7 @@ namespace ProjectAuto
 
         }
 
+        // добовление в лист автомобилей из сайта
         public void SetAuto(Automobile auto)
         {   
 
@@ -78,7 +80,24 @@ namespace ProjectAuto
 
             }
         }
-     
+
+        public void SetRepairsPart(RepairPart part)
+        {
+
+            using (SqlConnection connection = new SqlConnection(connectString))
+            {
+                SqlCommand command = new SqlCommand("INSERT INTO CatalogReprairsParts (namePart)" +
+                    "VALUES (@name)", connection);
+
+                command.Parameters.AddWithValue("name", part.namePart.ToString());
+               
+
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+
+            }
+        }
 
     }
 }

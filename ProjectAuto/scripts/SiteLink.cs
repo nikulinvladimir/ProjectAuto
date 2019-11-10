@@ -12,9 +12,7 @@ namespace ProjectAuto
 {
     class SiteLink
     {
-        List<string> linkImg;
-
-
+      
         public string GetPage(string link)
         {
             HttpRequest request = new HttpRequest();
@@ -39,7 +37,7 @@ namespace ProjectAuto
             var doc = htmlParser.ParseDocument(response);
             List<Automobile> product = new List<Automobile>();
 
-            linkImg = new List<string>();
+            List<string> linkImg = new List<string>();
 
             foreach (var item in doc.QuerySelectorAll(".catalog-models>>li"))
             {
@@ -54,9 +52,7 @@ namespace ProjectAuto
 
                 });
 
-                //linkImg.Add(item.QuerySelector("img").GetAttribute("src"));
-            }
-            //DownloadFileAsync().GetAwaiter();
+            }  
             return product;
 
         }
@@ -71,7 +67,27 @@ namespace ProjectAuto
             return @"D:\Works Projects\ProjectAuto\ProjectAuto\imageAuto\" + s.Remove(0, s.Length - 6);
 
         }
- 
+
+
+        public List<RepairPart> ParsRepairPart(string response)
+        {
+            HtmlParser htmlParser = new HtmlParser();
+
+            var doc = htmlParser.ParseDocument(response);
+            // add part in catalog
+            List<RepairPartCatalog> parts = new List<RepairPartCatalog>();
+           
+            foreach (var item in doc.QuerySelectorAll(".autopartsTree>ul>li"))
+            {
+                parts.Add(new RepairPartCatalog
+                {
+                    namePart = item.QuerySelector("a").TextContent,
+                });
+                
+            }
+            return parts;
+
+        }
 
     }
 }
