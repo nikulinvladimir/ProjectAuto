@@ -83,7 +83,7 @@
     <Compile Include="scripts\ConnectDB.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="scripts\RepairPart.cs" />
+    <Compile Include="scripts\CategoryRepairPart.cs" />
     <Compile Include="scripts\SiteLink.cs" />
     <Compile Include="Forms\ViewAuto.cs">
       <SubType>Form</SubType>
@@ -91,6 +91,7 @@
     <Compile Include="Forms\ViewAuto.Designer.cs">
       <DependentUpon>ViewAuto.cs</DependentUpon>
     </Compile>
+    <Compile Include="scripts\SubcategoriesRepairParts.cs" />
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.cs</DependentUpon>
     </EmbeddedResource>
