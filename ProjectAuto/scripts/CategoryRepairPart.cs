@@ -9,7 +9,9 @@ namespace ProjectAuto
     class CategoryRepairPart
     {
        public int id { get; set; } 
-       public string namePart { get; set; }
+       public string categoryName { get; set; }
        public int parent_id { get; set; }
-    }
+       //public string linkSubPart { get; set; }
+      
+    }   
 }

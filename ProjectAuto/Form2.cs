@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,7 +18,7 @@ namespace ProjectAuto
         SiteLink site;
 
 
-        List<string> link = new List<string>();
+        List<string> linkCategoryRepairPart = new List<string>();
 
         public Form2()
         {
@@ -39,16 +40,23 @@ namespace ProjectAuto
 
             foreach (var item in automobiles)
             {
-                richTextBox1.AppendText(item.linkAuto + " ");
+                richTextBox1.AppendText($"\n Название " + item.ID + $"\n № каталога " + item.autoLink + $"\n Год каталога " + item.catalogYears + $"\n № Модели " + item.model + $"\n Запчастей в наличии " + item.productInStock + $"\n   " + item.catalogId + $"\n   " + item.ImgLink + $"\n   " + item.imgPath);
+            }
 
-                //DB.SetAuto(item); /// запись в базу данных авто (ссылки,текст,картинки)
-                //ParsRepairsParts(item.linkAuto); /// парсинг катигорий запчастей
-                
+            foreach (var item in automobiles)
+            {
+                DB.SetAuto(item); /// запись в базу данных авто (ссылки,текст,картинки)
+                //string linktest = "https://www.avtoall.ru/catalog/paz-20/avtobusy-36/paz_672m-393/";
+                //ParsRepairsParts(linktest); /// парсинг катигорий запчастей
+                //ParsSubRepairsParts(linktest);
+
+
             }
         }
         #endregion
 
         #region ParsRepairParts
+ 
 
         void ParsRepairsParts(string link)
         {    
@@ -56,12 +64,28 @@ namespace ProjectAuto
 
             List<CategoryRepairPart> repairParts = new List<CategoryRepairPart>();
 
-            repairParts = site.ParsRepairPart(response);
-           
+            repairParts = site.ParsCategoryRepairPart(response);
+
             //DB.SetRepairsPart(repairParts);  
         }
 
         #endregion
+
+        void ParsSubRepairsParts(string link)
+        {
+            string response = site.GetPage(link);
+
+            List<CategoryRepairPart> SubRepairParts = new List<CategoryRepairPart>();
+
+            SubRepairParts = site.ParsSubRepairPart(response);
+
+            //foreach (var item in SubRepairParts)
+            //{
+            //    richTextBox1.AppendText(item.categoryName + " " + "\n");
+            //}
+
+            //DB.SetRepairsPart(repairParts);  
+        }
 
         #region ViewRun
         void RunFormView()
@@ -88,10 +112,10 @@ namespace ProjectAuto
         private void button2_Click(object sender, EventArgs e)
         {
 
-            //foreach (var automobile in DB.GetAuto())
-            //{
-            //    richTextBox1.AppendText($"\n Название " + automobile.ID + $"\n № каталога " + automobile.linkAuto + $"\n Год каталога " + automobile.catalogYears + $"\n № Модели " + automobile.model + $"\n Запчастей в наличии " + automobile.productInStock + $"\n   ");
-            //}
+            foreach (var automobile in DB.GetAuto())
+            {
+                richTextBox1.AppendText($"\n Название " + automobile.ID + $"\n № каталога " + automobile.autoLink + $"\n Год каталога " + automobile.catalogYears + $"\n № Модели " + automobile.model + $"\n Запчастей в наличии " + automobile.productInStock + $"\n   " + automobile.catalogId + $"\n   " + automobile.ImgLink + $"\n   " + automobile.ImgLink);
+            }
         }
     }
 }

@@ -114,5 +114,9 @@ D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.csproj.CopyCompl
 D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.exe
 D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.pdb
 D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.ViewAuto.resources
-D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.csprojAssemblyReference.cache
 D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.Form2.resources
+D:\Works Projects\ProjectAuto\ProjectAuto\bin\Debug\AngleSharp.Css.dll
+D:\Works Projects\ProjectAuto\ProjectAuto\bin\Debug\AngleSharp.Css.xml
+D:\Works Projects\ProjectAuto\ProjectAuto\bin\Debug\AngleSharp.XPath.dll
+D:\Works Projects\ProjectAuto\ProjectAuto\bin\Debug\AngleSharp.XPath.xml
+D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.CatalogParts.resources

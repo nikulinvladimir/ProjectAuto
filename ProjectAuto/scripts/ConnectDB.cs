@@ -32,14 +32,16 @@ namespace ProjectAuto
                     {
                         Automobile auto = new Automobile()
                         {
-                            ID = (int)reader[0],
-                            img = reader[6].ToString(),
+                            ID = (int)reader[0],        
                             nameAuto = reader[1].ToString(),
-                            linkAuto = reader[2].ToString(),
+                            catalogId = reader[2].ToString(),
                             catalogYears = reader[3].ToString(),
+                            productInStock = reader[4].ToString(),
                             model = reader[5].ToString(),
-                            productInStock = reader[4].ToString()
-
+                            imgPath = reader[6].ToString(),              
+                            ImgLink = reader[7].ToString(),
+                            autoLink = reader[8].ToString()
+                            
                         };
                         automobiles.Add(auto);
                     }
@@ -60,9 +62,10 @@ namespace ProjectAuto
 
         }
         #endregion
+
         // Возвращение в базу данных информацию о Зап части
         #region GetRepairsParts
-        public List<CategoryRepairPart> GetRepairsParts()
+        public List<CategoryRepairPart> GetCategoryRepairsParts()
         {
             List<CategoryRepairPart> repairParts = new List<CategoryRepairPart>();
             SqlDataReader reader = null;
@@ -80,7 +83,7 @@ namespace ProjectAuto
                         CategoryRepairPart auto = new CategoryRepairPart()
                         {
                             id = (int)reader[0],
-                            namePart = reader[1].ToString(),
+                            categoryName = reader[1].ToString(),
                             parent_id = (int)reader[2],
                         };
                         repairParts.Add(auto);
@@ -110,16 +113,18 @@ namespace ProjectAuto
 
             using (SqlConnection connection = new SqlConnection(connectString))
             {
-                SqlCommand command = new SqlCommand("INSERT INTO CatalogAutomobile (name,catalogId,catalogYears,productInStock,model,image)" +
-                    "VALUES (@name, @CatalogId, @CatalogYears, @productInStock, @model,@image)", connection);
+                SqlCommand command = new SqlCommand("INSERT INTO CatalogAutomobile (Id,name,catalogId,catalogYears,productInStock,model,imagePath,imageLink,autoCatalogLink)" +
+                    "VALUES (@Id,@name, @CatalogId, @CatalogYears, @productInStock, @model,@imgPath,@imgLink,@autoCatalogLink)", connection);
 
-
+                command.Parameters.AddWithValue("Id", auto.ID.ToString());
                 command.Parameters.AddWithValue("name", auto.nameAuto.ToString());
                 command.Parameters.AddWithValue("CatalogId", 1);
                 command.Parameters.AddWithValue("CatalogYears", auto.catalogYears.ToString());
                 command.Parameters.AddWithValue("model", auto.model.ToString());
                 command.Parameters.AddWithValue("productInStock", auto.productInStock.ToString());
-                command.Parameters.AddWithValue("image", auto.img.ToString());
+                command.Parameters.AddWithValue("imgPath", auto.imgPath.ToString());
+                command.Parameters.AddWithValue("imgLink", auto.ImgLink.ToString());
+                command.Parameters.AddWithValue("autoCatalogLink", auto.autoLink.ToString());
 
                 connection.Open();
                 command.ExecuteNonQuery();
@@ -144,7 +149,7 @@ namespace ProjectAuto
                 foreach (var item in parts)
                 {
                     SqlCommand command = new SqlCommand("INSERT INTO CatalogRepairsParts (namePart,parent_id) VALUES (@name,@id)", connection);
-                    command.Parameters.AddWithValue("name", item.namePart.ToString());
+                    command.Parameters.AddWithValue("name", item.categoryName.ToString());
                     command.Parameters.AddWithValue("id", i);
                     command.ExecuteNonQuery();
 
