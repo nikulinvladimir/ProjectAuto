@@ -67,23 +67,9 @@ namespace ProjectAuto
                     productInStock = item.QuerySelector("b>ins") == null ? "" : item.QuerySelector("b>ins").TextContent,
                     model = item.QuerySelector("b>small") == null ? "" : item.QuerySelector("b>small").TextContent,
                     ImgLink = item.QuerySelector("img").GetAttribute("src"), //сохраняет ссылки на картинки
-                    imgPath = pathToImage + item.QuerySelector("img").GetAttribute("src").Remove(0, item.QuerySelector("img").GetAttribute("src").Length - 6)
+                    imgPath = @"D:\Works Projects\ProjectAuto\ProjectAuto\imageAuto\" + item.QuerySelector("img").GetAttribute("src").Remove(0, item.QuerySelector("img").GetAttribute("src").Length - 6)
                 });
             }
-
-
-            List<CategoryRepairPart> CategoryRepairPart = new List<CategoryRepairPart>();
-
-            int CatalogPartCount = doc.QuerySelectorAll(".catalog-groups-tree>li").Count();
-
-            for (int i = 1; i < CatalogPartCount; i++)
-            {
-                var CatalogName = doc.DocumentElement.SelectSingleNode($"//*[@id='autoparts_tree']/ul/li[{i}]/a");
-                var SubNamePart = doc.DocumentElement.SelectSingleNode($"//*[@id='autoparts_tree']/ul/li[{1}]/ul");
-                CategoryRepairPart.Add(new CategoryRepairPart { categoryName = CatalogName.TextContent });
-            }
-
-
             return product;
 
         }
@@ -100,93 +86,113 @@ namespace ProjectAuto
             client.Headers["Accept-Encoding"] = "gzip, deflate, br";
             client.Headers["Accept"] = "image/webp,*/*";
             client.DownloadFileTaskAsync(new Uri(s), @"D:\Works Projects\ProjectAuto\ProjectAuto\imageAuto\" + s.Remove(0, s.Length - 6));
-            
+
         }
 
         #endregion
 
         // Парсинг всех ссылок на авто с автозапчастями
         #region ParsCategoryRepairPart
-
-        public List<CategoryRepairPart> ParsCategoryRepairPart(string response)
+        int CountCategoryId = 0;
+        public List<CategoryPart> ParsCategoryRepairPart(string response, int idAuto)
         {
             HtmlParser htmlParser = new HtmlParser();
 
+            List<CategoryPart> ListCategoryPart = new List<CategoryPart>();
+
             var doc = htmlParser.ParseDocument(response);
-            // add part in catalog
-            List<CategoryRepairPart> parts = new List<CategoryRepairPart>();
 
-            foreach (var item in doc.QuerySelectorAll(".catalog-groups-tree>li"))
+            for (int i = 1; i > 0; i++)
             {
-                parts.Add(new CategoryRepairPart
-                {
-                    categoryName = item.QuerySelector("a").TextContent,
-                });
-
+                var CatalogName = doc.DocumentElement.SelectSingleNode($"//*[@id='autoparts_tree']/ul/li[{i}]/a");
+                if (CatalogName == null)
+                    return ListCategoryPart;
+                ListCategoryPart.Add(new CategoryPart {
+                    id = ++CountCategoryId,
+                    categoryName = CatalogName.TextContent,
+                    autoId = idAuto });
             }
-            return parts;
+
+            return ListCategoryPart;
 
         }
 
         #endregion
 
+        #region ParsSubCategory
 
-        public List<CategoryRepairPart> ParsSubRepairPart(string response)
+        int CountSubCategoryId = 0;
+        public List<SubCategoryParts> ParsSubCategoryPart(string response, int idCategory)
         {
             HtmlParser htmlParser = new HtmlParser();
             var doc = htmlParser.ParseDocument(response);
 
             // add part in catalog  
-            List<CategoryRepairPart> CategoryRepairPart = new List<CategoryRepairPart>();
+            List<SubCategoryParts> ListSubCategoryRepairPart = new List<SubCategoryParts>();
 
-            int CatalogPartCount = doc.QuerySelectorAll(".catalog-groups-tree>li").Count();
-
-            for (int i = 1; i < CatalogPartCount; i++)
+            for (int i = 1; i > 0; i++)
             {
-                var CatalogName = doc.DocumentElement.SelectSingleNode($"//*[@id='autoparts_tree']/ul/li[{i}]/a");
-                var SubNamePart = doc.DocumentElement.SelectSingleNode($"//*[@id='autoparts_tree']/ul/li[{1}]/ul");
-                CategoryRepairPart.Add(new CategoryRepairPart { categoryName = CatalogName.TextContent });
-            }
-            //var items = doc.DocumentElement.SelectSingleNode("//*[@id='autoparts_tree']/ul/li[1]/a");
-            //CategoryRepairPart.Add(new SubRepairParts { nameSubPart = items.TextContent });
-            //foreach (var item in items)
-            {
+                var SubCatalogName = doc.DocumentElement.SelectSingleNode($"//*[@id='autoparts_tree']/ul/li[1]/ul/li[{i}]/a/text()");
+                var productInStock = doc.DocumentElement.SelectSingleNode($"//*[@id='autoparts_tree']/ul/li[1]/ul/li[{i}]/a/em");
 
-                //var selector = "*";//ссылки на каталоги запчастей
-                //CategoryRepairPart.Add(new SubRepairParts { nameSubPart = item.TextContent });
-                //CategoryRepairPart.Add(new SubRepairParts
-                //{  
+                if (SubCatalogName == null)
+                    return ListSubCategoryRepairPart;
 
-                //    //nameSubPart = item.QuerySelector(selectors)
-                //    //namePart = item.QuerySelector(selector).InnerHtml,
-                //});
+                if (productInStock != null)
+                {
+                    ListSubCategoryRepairPart.Add(new SubCategoryParts
+                    {
+                        id = ++CountSubCategoryId,
+                        nameSubCategoryPart = SubCatalogName.TextContent,
+                        categoryId = idCategory,
+                        countProductinStock = productInStock.TextContent
+                    });
+                }
+                ;
 
-
-                //var selectorAll = "li>ul>li";//subprt
-
-                //var a = item.QuerySelectorAll(selector);
-
-                //foreach (var s in a)
-                //{
-                //    parts.Add(new SubRepairParts
-                //    {
-                //        //nameSubPart = s.InnerHtml,
-                //        nameSubPart = s.QuerySelector(selectorAll).InnerHtml,
-                //    });
-                //}
-                //parts.Add(new SubRepairParts
-                //{
-                //    //nameSubPart = item.InnerHtml,
-                //    nameSubPart = item.QuerySelectorAll(selector),
-                //});
             }
 
 
-
-
-
-            return CategoryRepairPart;
+            return ListSubCategoryRepairPart;
 
         }
+        #endregion
+
+        //int CountRepairPartId = 0;
+
+        //public List<SubCategoryParts> ParsSubCategoryPart(string response, int idCategory)
+        //{
+        //    HtmlParser htmlParser = new HtmlParser();
+        //    var doc = htmlParser.ParseDocument(response);
+
+        //    add part in catalog
+        //    List<SubCategoryParts> ListSubCategoryRepairPart = new List<SubCategoryParts>();
+
+        //    for (int i = 1; i > 0; i++)
+        //    {
+        //        var SubCatalogName = doc.DocumentElement.SelectSingleNode($"//*[@id='autoparts_tree']/ul/li[1]/ul/li[{i}]/a/text()");
+        //        var productInStock = doc.DocumentElement.SelectSingleNode($"//*[@id='autoparts_tree']/ul/li[1]/ul/li[{i}]/a/em");
+
+        //        if (SubCatalogName == null)
+        //            return ListSubCategoryRepairPart;
+
+        //        if (productInStock != null)
+        //        {
+        //            ListSubCategoryRepairPart.Add(new SubCategoryParts
+        //            {
+        //                id = ++CountSubCategoryId,
+        //                nameSubCategoryPart = SubCatalogName.TextContent,
+        //                categoryId = idCategory,
+        //                countProductinStock = productInStock.TextContent
+        //            });
+        //        }
+        //        ;
+
+        //    }
+
+
+        //    return ListSubCategoryRepairPart;
+
+        //}
     }
 }

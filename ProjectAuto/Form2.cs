@@ -38,50 +38,54 @@ namespace ProjectAuto
 
             automobiles = site.ParsAutoCatalog(response);
 
-            foreach (var item in automobiles)
-            {
-                richTextBox1.AppendText($"\n Название " + item.ID + $"\n № каталога " + item.autoLink + $"\n Год каталога " + item.catalogYears + $"\n № Модели " + item.model + $"\n Запчастей в наличии " + item.productInStock + $"\n   " + item.catalogId + $"\n   " + item.ImgLink + $"\n   " + item.imgPath);
-            }
+            #region outputTextInAuto
+            //foreach (var item in automobiles)
+            //{
+            //    richTextBox1.AppendText($"\n Название " + item.ID + $"\n № каталога " + item.autoLink + $"\n Год каталога " + item.catalogYears + $"\n № Модели " + item.model + $"\n Запчастей в наличии " + item.productInStock + $"\n   " + item.catalogId + $"\n   " + item.ImgLink + $"\n   " + item.imgPath);
+            //}
+            #endregion          
 
             foreach (var item in automobiles)
             {
-                DB.SetAuto(item); /// запись в базу данных авто (ссылки,текст,картинки)
-                //string linktest = "https://www.avtoall.ru/catalog/paz-20/avtobusy-36/paz_672m-393/";
-                //ParsRepairsParts(linktest); /// парсинг катигорий запчастей
-                //ParsSubRepairsParts(linktest);
-
-
+                //DB.SetAuto(item); /// запись в базу данных авто (ссылки,текст,картинки)
+                ParsCatalogParts(item.autoLink,item.ID); /// парсинг катигорий запчасте
             }
         }
         #endregion
 
-        #region ParsRepairParts
+        #region ParsCatalogParts
  
 
-        void ParsRepairsParts(string link)
+        void ParsCatalogParts(string link,int idAuto)
         {    
             string response = site.GetPage(link);
 
-            List<CategoryRepairPart> repairParts = new List<CategoryRepairPart>();
+            List<CategoryPart> catalogParts = new List<CategoryPart>();
 
-            repairParts = site.ParsCategoryRepairPart(response);
+            catalogParts = site.ParsCategoryRepairPart(response,idAuto);
 
-            //DB.SetRepairsPart(repairParts);  
+            //DB.SetCatalogPart(catalogParts);
+            foreach (var item in catalogParts)
+            {
+                ParsSubCategoryParts(link,item.id);
+            }
         }
 
         #endregion
 
-        void ParsSubRepairsParts(string link)
+        void ParsSubCategoryParts(string link,int categoryId)
         {
             string response = site.GetPage(link);
 
-            List<CategoryRepairPart> SubRepairParts = new List<CategoryRepairPart>();
+            List<SubCategoryParts> ListSubCategoryParts = new List<SubCategoryParts>();
 
-            SubRepairParts = site.ParsSubRepairPart(response);
+            ListSubCategoryParts = site.ParsSubCategoryPart(response, categoryId);
 
-            //foreach (var item in SubRepairParts)
+            DB.SetSubCategoryPart(ListSubCategoryParts);
+
+            //foreach (var item in ListSubCategoryParts)
             //{
-            //    richTextBox1.AppendText(item.categoryName + " " + "\n");
+            //    richTextBox1.AppendText(item.categoryId + " "+item.nameSubCategoryPart +" " + item.CountProductinStock + " " + "\n");
             //}
 
             //DB.SetRepairsPart(repairParts);  

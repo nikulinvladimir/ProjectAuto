@@ -11,10 +11,10 @@ namespace ProjectAuto
 {
     class CreateAutoView
     {
-        List<Automobile> ListAuto;
         Automobile automobile; 
         ConnectDB connect;
         int catalogId = 0;
+
         public void RunForm(ViewAuto viewAuto)
         {
             
@@ -23,7 +23,7 @@ namespace ProjectAuto
             //сылка на авто
             automobile = new Automobile();
             // создание списка авто
-            ListAuto = new List<Automobile>();
+            List<Automobile> ListAuto = new List<Automobile>();
             // заполнение списка автомобилями из базы данных
             ListAuto = connect.GetAuto();
 
@@ -40,7 +40,7 @@ namespace ProjectAuto
                 CreadFlowPanel();
                 for (int i = 0; i < ListAuto.Count; i++)
                 {
-                    CreatView(new Panel(), "Panel" + i, ListAuto[i]);
+                    CreatView(new Panel(), "Panel" + i+1, ListAuto[i]);
 
                 }
             }
@@ -183,17 +183,20 @@ namespace ProjectAuto
 
         #endregion
 
-
+        int numberCatalog = 0;
 
         void RunFormCatalog()
         {
-            CatalogParts catalog = new CatalogParts();         
+            CatalogParts catalog = new CatalogParts(numberCatalog);
+            
             catalog.ShowDialog();
        
         }
 
         private void Button1_Click(object sender, EventArgs e)
         {
+            numberCatalog = int.Parse((((Button)sender).Parent.Name).Remove(0, (((Button)sender).Parent.Name).Length - 1));
+
             Thread thread = new Thread(RunFormCatalog);
             thread.Start();
 

@@ -11,28 +11,28 @@ using System.Windows.Forms;
 namespace ProjectAuto
 {
     public partial class CatalogParts : Form
-    {
-        CategoryRepairPart categoryRepair;
-        List<CategoryRepairPart> listCategoryRepair;
+    { 
+        List<CategoryPart> listCategoryParts;
         ConnectDB connectDB = new ConnectDB();
+ 
 
-        public CatalogParts()
+        public CatalogParts(int n)
         {
-            InitializeComponent();
+            //InitializeComponent();
 
+            listCategoryParts = new List<CategoryPart>();
 
-            categoryRepair = new CategoryRepairPart();
+            List<string> categoryName = new List<string>();
 
-            listCategoryRepair = new List<CategoryRepairPart>();
+            categoryName = connectDB.GetCategoryParts(n);
 
-            listCategoryRepair = connectDB.GetCategoryRepairsParts();
+            //string[] arrName = new string[categoryName.Count];
 
-            init();
+           
+            Init(categoryName);
         }
 
-       
-
-         public void init()
+        void Init(List<string> category)
         {
             this.components = new System.ComponentModel.Container();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -51,9 +51,7 @@ namespace ProjectAuto
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(541, 446);
             this.listBox1.TabIndex = 1;
-            this.listBox1.Items.Add("a");
-
-            this.listBox1.SelectedIndexChanged += ListBox1_SelectedIndexChanged;
+            this.listBox1.DataSource = category;
             // 
             // CatalogParts
             // 
@@ -65,16 +63,10 @@ namespace ProjectAuto
             this.Text = "CatalogParts";
             this.ResumeLayout(false);
 
-
-        }
-
-        private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-          
         }
 
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ListBox listBox1;
-  
+
     }
 }

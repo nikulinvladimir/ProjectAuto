@@ -120,3 +120,4 @@ D:\Works Projects\ProjectAuto\ProjectAuto\bin\Debug\AngleSharp.Css.xml
 D:\Works Projects\ProjectAuto\ProjectAuto\bin\Debug\AngleSharp.XPath.dll
 D:\Works Projects\ProjectAuto\ProjectAuto\bin\Debug\AngleSharp.XPath.xml
 D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.CatalogParts.resources
+D:\Works Projects\ProjectAuto\ProjectAuto\obj\Debug\ProjectAuto.csprojAssemblyReference.cache
