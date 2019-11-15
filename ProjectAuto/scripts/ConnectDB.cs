@@ -73,7 +73,7 @@ namespace ProjectAuto
 
             using (SqlConnection connection = new SqlConnection(connectString))
             {
-                SqlCommand command = new SqlCommand($"SELECT Id,namePart FROM CatalogRepairsParts WHERE autoId = {n}", connection);
+                SqlCommand command = new SqlCommand($"SELECT *FROM CatalogRepairsParts WHERE autoId = {n}", connection);
                 connection.Open();
 
                 try
@@ -109,15 +109,15 @@ namespace ProjectAuto
         #endregion
 
         #region GetSubCategoryParts
-        public List<string> GetSubCategoryParts(int n)
+        public List<SubCategoryParts> GetSubCategoryParts()
         {
             //List<CategoryPart> repairParts = new List<CategoryPart>();
-            List<string> nameSubParts = new List<string>();
+            List<SubCategoryParts> listSubParts = new List<SubCategoryParts>();
             SqlDataReader reader = null;
 
             using (SqlConnection connection = new SqlConnection(connectString))
             {
-                SqlCommand command = new SqlCommand($"SELECT nameSubPart,CountProductInStock FROM SubCategoryParts WHERE categoryId = {n}", connection);
+                SqlCommand command = new SqlCommand($"SELECT * FROM SubCategoryParts", connection);
                 connection.Open();
 
                 try
@@ -125,14 +125,15 @@ namespace ProjectAuto
                     reader = command.ExecuteReader();
                     while (reader.Read())
                     {
-                        nameSubParts.Add(reader[0].ToString() +" " + reader[1].ToString());
-                        //CategoryPart auto = new CategoryPart()
-                        //{
-                        //    id = (int)reader[0],
-                        //    categoryName = reader[1].ToString(),
-                        //    autoId = (int)reader[2],
-                        //};
-                        //repairParts.Add(auto);
+                        //nameSubParts.Add(reader[0].ToString() +" " + reader[1].ToString());
+                        SubCategoryParts SubPart = new SubCategoryParts()
+                        {
+                            id = (int)reader[0],
+                            nameSubCategoryPart = reader[1].ToString(),
+                            categoryId = (int)reader[2],
+                            countProductinStock = reader[3].ToString(),
+                        };
+                    listSubParts.Add(SubPart);
                     }
                 }
                 catch (Exception e)
@@ -146,11 +147,57 @@ namespace ProjectAuto
                 }
 
                 connection.Close();
-                return nameSubParts;
+                return listSubParts;
             }
 
         }
         #endregion
+
+        #region GetRepairsParts
+        public List<RepairPart> GetRepairsParts()
+        {
+            //List<CategoryPart> repairParts = new List<CategoryPart>();
+            List<RepairPart> listSubParts = new List<RepairPart>();
+            SqlDataReader reader = null;
+
+            using (SqlConnection connection = new SqlConnection(connectString))
+            {
+                SqlCommand command = new SqlCommand($"SELECT * FROM TableRepairsParts", connection);
+                connection.Open();
+
+                try
+                {
+                    reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        //nameSubParts.Add(reader[0].ToString() +" " + reader[1].ToString());
+                        RepairPart RepairPart = new RepairPart()
+                        {
+                            id = (int)reader[0],
+                            nameRepairPart = reader[1].ToString(),
+                            subCategoryId = (int)reader[2],
+                            countProductinStock = reader[3].ToString(),
+                        };
+                        listSubParts.Add(RepairPart);
+                    }
+                }
+                catch (Exception e)
+                {
+
+                    if (reader != null)
+                    {
+                        reader.Close();
+                    }
+                    throw e;
+                }
+
+                connection.Close();
+                return listSubParts;
+            }
+
+        }
+        #endregion
+
         // добовление в базу автомобилей из сайта
         #region SetAuto
         public void SetAuto(Automobile auto)

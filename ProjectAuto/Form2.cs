@@ -77,8 +77,8 @@ namespace ProjectAuto
             {
                 //richTextBox1.AppendText(repPart.id + " " + repPart.nameRepairPart + " " + repPart.subCategoryId +"\n");
             }
-            //DB.SetRepairPart(parser.listRerairParts);
-            DB.SetSubCategoryPart(parser.listSubCetegoryParts);
+            DB.SetRepairPart(parser.listRerairParts);
+            //DB.SetSubCategoryPart(parser.listSubCetegoryParts);
         }
 
         #endregion

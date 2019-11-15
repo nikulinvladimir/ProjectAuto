@@ -166,7 +166,7 @@ namespace ProjectAuto
                             {
                                 id = idRepairPart,
                                 nameRepairPart = nameRepairPart.TextContent,
-                                subCategoryId = CountSubCategory,
+                                subCategoryId = idCountSubCategory,
                                 countProductinStock = partInStock == null ? "" : partInStock.TextContent,
                                 repairPartLink = SITEURL + linkInPart
 
