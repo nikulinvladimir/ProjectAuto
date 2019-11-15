@@ -30,7 +30,6 @@ namespace ProjectAuto
 
             DinemicCreatPanelView();
 
-
             #region DinemicCreatPanelView
 
 
@@ -38,11 +37,27 @@ namespace ProjectAuto
             void DinemicCreatPanelView()
             {
                 CreadFlowPanel();
+
                 for (int i = 0; i < ListAuto.Count; i++)
                 {
-                    CreatView(new Panel(), "Panel" + i+1, ListAuto[i]);
+                    CreatView(CreatePanel(i), ListAuto[i], CreateButton(i));
 
                 }
+            }
+
+            Panel CreatePanel(int indexPanel)
+            {
+                Panel panel = new Panel();
+                panel.Name = "Panel" + (indexPanel + 1);
+                return panel;
+
+            }
+
+            Button CreateButton(int nameIndex)
+            {
+                Button buttonDynamic = new Button();
+                buttonDynamic.Name = "button" + (nameIndex + 1);
+                return buttonDynamic;
             }
 
             // создание скролящуюсь панель
@@ -60,7 +75,7 @@ namespace ProjectAuto
 
             }
             // шаблон из блока информации авто
-            void CreatView(Panel panel, string namePanel, Automobile auto)
+            void CreatView(Panel panel, Automobile auto,Button button)
             {
                 ///Добовление панелей на flowPanel
                 this.flowLayoutPanel1.Controls.Add(panel);
@@ -73,7 +88,6 @@ namespace ProjectAuto
                 this.labelProductInStock = new System.Windows.Forms.Label();
                 this.labelName = new System.Windows.Forms.Label();
                 this.labelCatalogYears = new System.Windows.Forms.Label();
-                this.button1 = new System.Windows.Forms.Button();
                 ((System.ComponentModel.ISupportInitialize)(this.pictureBox0)).BeginInit();
                 viewAuto.SuspendLayout();
 
@@ -85,10 +99,9 @@ namespace ProjectAuto
                 panel.Controls.Add(this.labelProductInStock);
                 panel.Controls.Add(this.labelName);
                 panel.Controls.Add(this.labelCatalogYears);
-                panel.Controls.Add(this.button1);
+                panel.Controls.Add(button);
                 panel.Location = new System.Drawing.Point(10, 10);
-                panel.Margin = new System.Windows.Forms.Padding(10);
-                panel.Name = namePanel;                                  // изменяем имя панели
+                panel.Margin = new System.Windows.Forms.Padding(10);                               // изменяем имя панели
                 panel.Padding = new System.Windows.Forms.Padding(5);
                 panel.Size = new System.Drawing.Size(200, 200);
                 panel.TabIndex = 5;
@@ -144,14 +157,14 @@ namespace ProjectAuto
 
                 // button1
                 //
-                this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-                this.button1.Location = new System.Drawing.Point(5, 145);
-                this.button1.Name = "button1";
-                this.button1.Size = new System.Drawing.Size(125, 34);
-                this.button1.TabIndex = 5;
-                this.button1.Text = "Каталог запчастей";
-                this.button1.UseVisualStyleBackColor = true;
-                this.button1.Click += Button1_Click;
+                button.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+                button.Location = new System.Drawing.Point(5, 145);
+                button.Size = new System.Drawing.Size(125, 34);
+                button.Name = button.Name;
+                button.TabIndex = 5;
+                button.Text = "Каталог запчастей";
+                button.UseVisualStyleBackColor = true;
+                button.Click += Button1_Click;
 
                 // ViewAuto
                 // 
@@ -173,32 +186,33 @@ namespace ProjectAuto
         }      
 
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        //private System.Windows.Forms.Panel panel;
         private System.Windows.Forms.Label labelModel;
         private System.Windows.Forms.PictureBox pictureBox0;
         private System.Windows.Forms.Label labelProductInStock;
         private System.Windows.Forms.Label labelName;
         private System.Windows.Forms.Label labelCatalogYears;
-        private System.Windows.Forms.Button button1;
 
         #endregion
 
         int numberCatalog = 0;
 
-        void RunFormCatalog()
-        {
-            CatalogParts catalog = new CatalogParts(numberCatalog);
-            
-            catalog.ShowDialog();
-       
-        }
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            numberCatalog = int.Parse((((Button)sender).Parent.Name).Remove(0, (((Button)sender).Parent.Name).Length - 1));
+            
+            numberCatalog = int.Parse((((Button)sender).Name).Remove(0, (((Button)sender).Name).Length - 1));
+            //MessageBox.Show(int.Parse((((Button)sender).Name).Remove(0, (((Button)sender).Name).Length - 1)).ToString());
 
             Thread thread = new Thread(RunFormCatalog);
             thread.Start();
+
+        }
+
+        void RunFormCatalog()
+        {
+            CatalogParts catalog = new CatalogParts(numberCatalog);
+
+            catalog.ShowDialog();
 
         }
     }

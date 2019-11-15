@@ -65,15 +65,15 @@ namespace ProjectAuto
 
         // Возвращение в базу данных информацию о Зап части
         #region GetCategoryParts
-        public List<string> GetCategoryParts(int n)
+        public List<CategoryPart> GetCategoryParts(int n)
         {
             //List<CategoryPart> repairParts = new List<CategoryPart>();
-            List<string> nameParts = new List<string>();
+            List<CategoryPart> categoryPart = new List<CategoryPart>();
             SqlDataReader reader = null;
 
             using (SqlConnection connection = new SqlConnection(connectString))
             {
-                SqlCommand command = new SqlCommand($"SELECT namePart FROM CatalogRepairsParts WHERE autoId = {n}", connection);
+                SqlCommand command = new SqlCommand($"SELECT Id,namePart FROM CatalogRepairsParts WHERE autoId = {n}", connection);
                 connection.Open();
 
                 try
@@ -81,7 +81,51 @@ namespace ProjectAuto
                     reader = command.ExecuteReader();
                     while (reader.Read())
                     {
-                        nameParts.Add(reader[0].ToString());
+                        //nameParts.Add(reader[0].ToString());
+                        CategoryPart auto = new CategoryPart()
+                        {
+                            id = (int)reader[0],
+                            categoryName = reader[1].ToString(),
+                            //autoId = (int)reader[2],
+                        };
+                        categoryPart.Add(auto);
+                    }
+                }
+                catch (Exception e)
+                {
+
+                    if (reader != null)
+                    {
+                        reader.Close();
+                    }
+                    throw e;
+                }
+
+                connection.Close();
+                return categoryPart;
+            }
+
+        }
+        #endregion
+
+        #region GetSubCategoryParts
+        public List<string> GetSubCategoryParts(int n)
+        {
+            //List<CategoryPart> repairParts = new List<CategoryPart>();
+            List<string> nameSubParts = new List<string>();
+            SqlDataReader reader = null;
+
+            using (SqlConnection connection = new SqlConnection(connectString))
+            {
+                SqlCommand command = new SqlCommand($"SELECT nameSubPart,CountProductInStock FROM SubCategoryParts WHERE categoryId = {n}", connection);
+                connection.Open();
+
+                try
+                {
+                    reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        nameSubParts.Add(reader[0].ToString() +" " + reader[1].ToString());
                         //CategoryPart auto = new CategoryPart()
                         //{
                         //    id = (int)reader[0],
@@ -102,13 +146,11 @@ namespace ProjectAuto
                 }
 
                 connection.Close();
-                return nameParts;
+                return nameSubParts;
             }
 
         }
         #endregion
-
-
         // добовление в базу автомобилей из сайта
         #region SetAuto
         public void SetAuto(Automobile auto)
@@ -165,7 +207,7 @@ namespace ProjectAuto
         }
         #endregion
 
-        #region SetRepairsPart
+        #region SetSubCategoryPart
         public void SetSubCategoryPart(List<SubCategoryParts> parts)
         {
 
@@ -191,5 +233,59 @@ namespace ProjectAuto
         }
         #endregion   
 
+        #region SetCatalogPart
+
+        //public void SetCatalogPart(List<CategoryPart> parts)
+        //{
+
+        //    using (SqlConnection connection = new SqlConnection(connectString))
+        //    {
+        //        connection.Open();
+
+        //        foreach (var item in parts)
+        //        {
+        //            SqlCommand command = new SqlCommand("INSERT INTO CatalogRepairsParts (Id,namePart,autoId) VALUES (@id,@name,@autoId)", connection);
+        //            command.Parameters.AddWithValue("id", item.id);
+        //            command.Parameters.AddWithValue("name", item.categoryName.ToString());
+        //            command.Parameters.AddWithValue("autoId", item.autoId);
+        //            command.ExecuteNonQuery();
+
+        //            //SqlCommand commandAddId = new SqlCommand("UPDATE CatalogRepairsParts  SET parent_id = CatalogAutomobile.Id FROM CatalogAutomobile", connection);
+        //            //commandAddId.ExecuteNonQuery();
+        //        }
+
+
+        //        connection.Close();
+
+        //    }
+        //}
+        #endregion
+
+        #region SetRepairPart
+
+        public void SetRepairPart(List<RepairPart> parts)
+        {
+
+            using (SqlConnection connection = new SqlConnection(connectString))
+            {
+                connection.Open();
+
+                foreach (var item in parts)
+                {
+                    SqlCommand command = new SqlCommand("INSERT INTO TableRepairsParts (Id,nameRepairPart,subCategoryId,countProductinStock,repairPartLink) VALUES (@id,@nameRepairPart,@subCategoryId,@countProductinStock,@repairPartLink)", connection);
+                    command.Parameters.AddWithValue("id", item.id);
+                    command.Parameters.AddWithValue("nameRepairPart", item.nameRepairPart.ToString());
+                    command.Parameters.AddWithValue("subCategoryId", item.subCategoryId);
+                    command.Parameters.AddWithValue("countProductinStock", item.countProductinStock.ToString());
+                    command.Parameters.AddWithValue("repairPartLink", item.repairPartLink.ToString());
+                    command.ExecuteNonQuery();
+                }
+
+
+                connection.Close();
+
+            }
+        }
+        #endregion   
     }
 }

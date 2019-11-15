@@ -15,28 +15,23 @@ namespace ProjectAuto
     public partial class Form2 : Form
     {
         ConnectDB DB;
-        SiteLink site;
-
-
-        List<string> linkCategoryRepairPart = new List<string>();
-
+        Parser parser;
+        string link = "https://www.avtoall.ru/catalog/paz-20/";
+        List<string> links = new List<string>();
         public Form2()
         {
             InitializeComponent();
             DB = new ConnectDB();
-            site = new SiteLink();
+            parser = new Parser();
         }
 
         #region ParsAutoCatalog
-  
+
 
         void ParsAutoCatalog()
         {
-            string link = "https://www.avtoall.ru/catalog/paz-20/";
-            string response = site.GetPage(link);
             List<Automobile> automobiles = new List<Automobile>();
-
-            automobiles = site.ParsAutoCatalog(response);
+            automobiles = parser.ParsAutoCatalog(link);
 
             #region outputTextInAuto
             //foreach (var item in automobiles)
@@ -48,48 +43,56 @@ namespace ProjectAuto
             foreach (var item in automobiles)
             {
                 //DB.SetAuto(item); /// запись в базу данных авто (ссылки,текст,картинки)
+                //links.Add(item.autoLink);
+
                 ParsCatalogParts(item.autoLink,item.ID); /// парсинг катигорий запчасте
+                
             }
         }
         #endregion
 
         #region ParsCatalogParts
- 
 
-        void ParsCatalogParts(string link,int idAuto)
-        {    
-            string response = site.GetPage(link);
+        void ParsCatalogParts(string link, int idAuto)
+        {
 
-            List<CategoryPart> catalogParts = new List<CategoryPart>();
-
-            catalogParts = site.ParsCategoryRepairPart(response,idAuto);
+            parser.ParsCategoryRepairPart(link, idAuto);
 
             //DB.SetCatalogPart(catalogParts);
-            foreach (var item in catalogParts)
+            
+            foreach (var item in parser.listCategoryPart)
             {
-                ParsSubCategoryParts(link,item.id);
+                //richTextBox1.AppendText(item.id + " " + item.categoryName + " " + item.autoId + "\n");
+                //ParsSubCategoryParts(item.id);      
+
             }
+
+            foreach (var Subitem in parser.listSubCetegoryParts)
+            {
+                richTextBox1.AppendText(Subitem.id + " " + Subitem.nameSubCategoryPart + " " + Subitem.categoryId + "\n");
+
+            }
+
+            foreach (var repPart in parser.listRerairParts)
+            {
+                //richTextBox1.AppendText(repPart.id + " " + repPart.nameRepairPart + " " + repPart.subCategoryId +"\n");
+            }
+            //DB.SetRepairPart(parser.listRerairParts);
+            DB.SetSubCategoryPart(parser.listSubCetegoryParts);
         }
 
         #endregion
 
-        void ParsSubCategoryParts(string link,int categoryId)
-        {
-            string response = site.GetPage(link);
+        //void ParsSubCategoryParts(string link)
+        //{
+        //    //List<SubCategoryParts> ListSubCategoryParts = new List<SubCategoryParts>();
+           
+        //    //ListSubCategoryParts = parser.ParsSubCategoryPart(link, 1);
 
-            List<SubCategoryParts> ListSubCategoryParts = new List<SubCategoryParts>();
+        //    //DB.SetSubCategoryPart(ListSubCategoryParts);
+  
 
-            ListSubCategoryParts = site.ParsSubCategoryPart(response, categoryId);
-
-            DB.SetSubCategoryPart(ListSubCategoryParts);
-
-            //foreach (var item in ListSubCategoryParts)
-            //{
-            //    richTextBox1.AppendText(item.categoryId + " "+item.nameSubCategoryPart +" " + item.CountProductinStock + " " + "\n");
-            //}
-
-            //DB.SetRepairsPart(repairParts);  
-        }
+        //}
 
         #region ViewRun
         void RunFormView()

@@ -11,7 +11,7 @@ namespace ProjectAuto
        public int id { get; set; } 
        public string categoryName { get; set; }
        public int autoId { get; set; }
-       //public string linkSubPart { get; set; }
+       public List<SubCategoryParts> linkSubPart { get; set; } = new List<SubCategoryParts>();
       
     }   
 }
