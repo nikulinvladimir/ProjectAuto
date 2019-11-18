@@ -16,8 +16,7 @@ namespace ProjectAuto
     {
         ConnectDB DB;
         Parser parser;
-        string link = "https://www.avtoall.ru/catalog/paz-20/";
-        List<string> links = new List<string>();
+
         public Form2()
         {
             InitializeComponent();
@@ -27,72 +26,30 @@ namespace ProjectAuto
 
         #region ParsAutoCatalog
 
-
         void ParsAutoCatalog()
         {
-            List<Automobile> automobiles = new List<Automobile>();
-            automobiles = parser.ParsAutoCatalog(link);
+            //parser.ParsAutoCatalog();
 
-            #region outputTextInAuto
-            //foreach (var item in automobiles)
-            //{
-            //    richTextBox1.AppendText($"\n Название " + item.ID + $"\n № каталога " + item.autoLink + $"\n Год каталога " + item.catalogYears + $"\n № Модели " + item.model + $"\n Запчастей в наличии " + item.productInStock + $"\n   " + item.catalogId + $"\n   " + item.ImgLink + $"\n   " + item.imgPath);
-            //}
-            #endregion          
-
-            foreach (var item in automobiles)
-            {
-                //DB.SetAuto(item); /// запись в базу данных авто (ссылки,текст,картинки)
-                //links.Add(item.autoLink);
-
-                ParsCatalogParts(item.autoLink,item.ID); /// парсинг катигорий запчасте
-                
-            }
         }
         #endregion
 
-        #region ParsCatalogParts
 
-        void ParsCatalogParts(string link, int idAuto)
+
+        //Добоавлние данных в базу
+        #region Добовлние в базу данных
+
+        void AddDataBase()
         {
 
-            parser.ParsCategoryRepairPart(link, idAuto);
-
-            //DB.SetCatalogPart(catalogParts);
-            
-            foreach (var item in parser.listCategoryPart)
-            {
-                //richTextBox1.AppendText(item.id + " " + item.categoryName + " " + item.autoId + "\n");
-                //ParsSubCategoryParts(item.id);      
-
-            }
-
-            foreach (var Subitem in parser.listSubCetegoryParts)
-            {
-                richTextBox1.AppendText(Subitem.id + " " + Subitem.nameSubCategoryPart + " " + Subitem.categoryId + "\n");
-
-            }
-
-            foreach (var repPart in parser.listRerairParts)
-            {
-                //richTextBox1.AppendText(repPart.id + " " + repPart.nameRepairPart + " " + repPart.subCategoryId +"\n");
-            }
-            DB.SetRepairPart(parser.listRerairParts);
+            //DB.SetAuto(parser.automobiles);
+            //DB.SetCatalogPart(parser.listCategoryPart);
+            //DB.SetRepairPart(parser.listRerairParts);
             //DB.SetSubCategoryPart(parser.listSubCetegoryParts);
+            //DB.SetPartDescription(parser.listPartsDiscription);
         }
 
         #endregion
 
-        //void ParsSubCategoryParts(string link)
-        //{
-        //    //List<SubCategoryParts> ListSubCategoryParts = new List<SubCategoryParts>();
-           
-        //    //ListSubCategoryParts = parser.ParsSubCategoryPart(link, 1);
-
-        //    //DB.SetSubCategoryPart(ListSubCategoryParts);
-  
-
-        //}
 
         #region ViewRun
         void RunFormView()
@@ -109,20 +66,60 @@ namespace ProjectAuto
         }
         #endregion
 
+
         #region ButtonStarPars
+
         private void button1_Click_1(object sender, EventArgs e)
         {
-            ParsAutoCatalog();
+            Thread thread = new Thread(ParsAutoCatalog);
+            thread.Start();
         }
         #endregion
+
+        #region Button Test
 
         private void button2_Click(object sender, EventArgs e)
         {
 
-            foreach (var automobile in DB.GetAuto())
+            parser.ParsLinkRepairs();
+
+            DB.SetPartDescription(parser.listPartsDiscription);
+
+            foreach (var part in parser.listPartsDiscription)
             {
-                richTextBox1.AppendText($"\n Название " + automobile.ID + $"\n № каталога " + automobile.autoLink + $"\n Год каталога " + automobile.catalogYears + $"\n № Модели " + automobile.model + $"\n Запчастей в наличии " + automobile.productInStock + $"\n   " + automobile.catalogId + $"\n   " + automobile.ImgLink + $"\n   " + automobile.ImgLink);
+                if (part.goodsParts.GetType() == typeof(List<GoodsPart>))
+                    DB.SetPartDescriptionInPrice(part.goodsParts);
+
+                if (part.missingParts.GetType() == typeof(List<MissingPart>))
+                    DB.SetPartDescriptionNoPrice(part.missingParts);
+
+                return;
             }
+
+            //foreach (var item in parser.automobiles)
+            //{
+            //    richTextBox1.AppendText(item.nameAuto + " " + item.productInStock + " " + item.model + "\n");
+            //}
+
+            //foreach (var item in parser.listCategoryPart)
+            //{
+            //    richTextBox1.AppendText(item.id + " " + item.categoryName + " " + item.autoId + "\n");
+            //}
+
+            //foreach (var Subitem in parser.listSubCetegoryParts)
+            //{
+            //    richTextBox1.AppendText(Subitem.id + " " + Subitem.nameSubCategoryPart + " " + Subitem.categoryId + "\n");
+            //}
+
+            //foreach (var repPart in parser.listRerairParts)
+            //{
+            //    richTextBox1.AppendText(repPart.id + " " + repPart.nameRepairPart + " " + repPart.subCategoryId + "\n");
+            //}
+
+
         }
+
+        #endregion
+
     }
 }

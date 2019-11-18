@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,6 +18,10 @@ namespace ProjectAuto
         List<RepairPart> listRepairsParts;
 
         ConnectDB connectDB = new ConnectDB();
+
+        int idSubPart = 0;
+        int idRepairPart = 0;
+
         //List<string> SubcategoryName;
 
         public CatalogParts(int n)
@@ -74,13 +79,13 @@ namespace ProjectAuto
 
         #region Get data SubPart
         //поиск ИД по названию подкаталоги для поиска запчастей
-        int GetIdRepairPart(string nameSubPart)
+        int GetIdRepairPart(string nameSubPart,int idSubPart)
         {
             int idCategory = 0;
 
             foreach (var item in listSubParts)
             {
-                if (item.nameSubCategoryPart == nameSubPart)
+                if (item.nameSubCategoryPart == nameSubPart&& item.categoryId == idSubPart)
                 {
                     idCategory = item.id;
                 }
@@ -122,13 +127,13 @@ namespace ProjectAuto
             return nameParts;
         }
         // поиск ИД запчасти по названию что бы открыть нужную запчасть
-        int GetIdRepairsParts(string nameSubPart)
+        int GetIdRepairsParts(string nameSubPart,int idsubpart)
         {
             int idCategory = 0;
 
             foreach (var item in listRepairsParts)
             {
-                if (item.nameRepairPart == nameSubPart)
+                if (item.nameRepairPart == nameSubPart&&item.subCategoryId == idsubpart)
                 {
                     idCategory = item.id;
                 }
@@ -215,12 +220,13 @@ namespace ProjectAuto
 
         #region Создание листБоксов на все категории(нечего умнее не смог придумать:()
 
+
         private void ListBox1_DoubleClick(object sender, EventArgs e)
         {
             string nameListItem = ((ListBox)sender).SelectedItem.ToString();
 
+            idSubPart = GetIdCategoryPart(nameListItem);
 
-            int idSubPart = GetIdCategoryPart(nameListItem);
             List<string> SubcategoryName = new List<string>();
             SubcategoryName = GetNameSubPart(idSubPart);
 
@@ -234,14 +240,15 @@ namespace ProjectAuto
             this.listBox2.TabIndex = 1;
             this.listBox2.DataSource = SubcategoryName;
             this.listBox2.DoubleClick += ListBox2_DoubleClick;
-            //MessageBox.Show(nameListItem);
+           //MessageBox.Show(idSubPart.ToString());
         }
+
 
         private void ListBox2_DoubleClick(object sender, EventArgs e)
         {
-
             string nameSubRepairParts = ((ListBox)sender).SelectedItem.ToString();
-            int idRepairPart = GetIdRepairPart(nameSubRepairParts);
+            idRepairPart = GetIdRepairPart(nameSubRepairParts,idSubPart);
+
             List<string> SubcategoryName = new List<string>();
             SubcategoryName = GetNameRepairsParts(idRepairPart);
 
@@ -260,12 +267,22 @@ namespace ProjectAuto
 
         private void ListBox3_DoubleClick(object sender, EventArgs e)
         {
-            //string nameSubRepairParts = ((ListBox)sender).SelectedItem.ToString();
-            //int idRepairPart = GetIdRepairPart(nameSubRepairParts);
-            //List<string> SubcategoryName = new List<string>();
-            //SubcategoryName = GetNameRepairsParts(idRepairPart);
+            string nameSubRepairParts = ((ListBox)sender).SelectedItem.ToString();
+            int id = GetIdRepairsParts(nameSubRepairParts, idRepairPart);
+
+            Thread thread = new Thread(new ParameterizedThreadStart(StartItemPart));
+            thread.Start(id);
+
+            
         }
         #endregion
+
+        public  void StartItemPart(object idPart)
+        {
+            ItemsPatr itemsPatr = new ItemsPatr((int)idPart);
+            itemsPatr.ShowDialog(); 
+           
+        }
 
 
     }

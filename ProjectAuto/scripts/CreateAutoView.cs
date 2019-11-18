@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -123,7 +124,8 @@ namespace ProjectAuto
                 this.pictureBox0.Size = new System.Drawing.Size(190, 100);
                 this.pictureBox0.TabIndex = 0;
                 this.pictureBox0.TabStop = false;
-                this.pictureBox0.Image = Image.FromFile(auto.imgPath);
+                string path = Environment.CurrentDirectory + auto.imgPath;
+                this.pictureBox0.Image = Image.FromFile(path);
                 // 
                 // labelProductInStock
                 // 
@@ -211,9 +213,7 @@ namespace ProjectAuto
         void RunFormCatalog()
         {
             CatalogParts catalog = new CatalogParts(numberCatalog);
-
             catalog.ShowDialog();
-
         }
     }
 
