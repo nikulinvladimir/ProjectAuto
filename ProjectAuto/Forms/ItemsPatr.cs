@@ -36,6 +36,12 @@ namespace ProjectAuto
             listNoPrice = ConnectDB.GetPartDescriptionNoPrice(n);
 
 
+            Init(n);
+        }
+
+        void Init(int n)
+        {
+
             Part part = new Part();
             foreach (var item in listParts)
             {
@@ -43,13 +49,13 @@ namespace ProjectAuto
                 {
                     part = item;
                 }
-            }  
+            }
 
-            ShowDescription(part);  
+            ShowDescription(part);
 
             foreach (var item in listGoodsParts)
             {
-                CreatePanelPart(item.namePart,item.linkImagePart,item.price);
+                CreatePanelPart(item.namePart, item.linkImagePart, item.price);
             }
 
             CreateHeaderNoPrice();
@@ -60,6 +66,9 @@ namespace ProjectAuto
             }
 
         }
+
+
+        #region Create parts views
 
 
         void ShowDescription(Part part)
@@ -76,14 +85,14 @@ namespace ProjectAuto
             this.panelHeaderGoods.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.panelImage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.PictureBoxSchemeImagePart)).BeginInit();  
+            ((System.ComponentModel.ISupportInitialize)(this.PictureBoxSchemeImagePart)).BeginInit();
             this.SuspendLayout();
             // 
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.AutoScroll = true;
             this.flowLayoutPanel1.Controls.Add(this.panelImage);
-            this.flowLayoutPanel1.Controls.Add(this.panelHeaderGoods); 
+            this.flowLayoutPanel1.Controls.Add(this.panelHeaderGoods);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -118,7 +127,7 @@ namespace ProjectAuto
             this.panelHeaderGoods.Location = new System.Drawing.Point(3, 237);
             this.panelHeaderGoods.Name = "panelArticle";
             this.panelHeaderGoods.Size = new System.Drawing.Size(535, 23);
-            this.panelHeaderGoods.TabIndex = 1;      
+            this.panelHeaderGoods.TabIndex = 1;
             // 
             // labelCountGoods
             // 
@@ -127,7 +136,7 @@ namespace ProjectAuto
             this.labelCountGoods.Name = "labelCountGoods";
             this.labelCountGoods.Size = new System.Drawing.Size(35, 13);
             this.labelCountGoods.TabIndex = 1;
-            this.labelCountGoods.Text = part.countGoods; 
+            this.labelCountGoods.Text = part.countGoods;
             // 
             // labelArticleGoods
             // 
@@ -156,7 +165,7 @@ namespace ProjectAuto
             this.flowLayoutPanel1.ResumeLayout(false);
             this.panelImage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxSchemeImagePart)).EndInit();
-            
+
             this.ResumeLayout(false);
 
             this.panelHeaderGoods.ResumeLayout(false);
@@ -165,7 +174,10 @@ namespace ProjectAuto
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
         }
 
-        Panel CreatePanelNoPrice(string name,string article,string countProd)
+
+        #region CreatePanelNoPrice
+
+        Panel CreatePanelNoPrice(string name, string article, string countProd)
         {
             Panel panelMissingPart = new Panel();
 
@@ -174,7 +186,7 @@ namespace ProjectAuto
             this.labelArticleNoPrice = new System.Windows.Forms.Label();
             this.labelCountProductNoPrice = new System.Windows.Forms.Label();
 
-            
+
             // panelMissingPart
             // 
             panelMissingPart.Controls.Add(this.labelCountProductNoPrice);
@@ -221,6 +233,9 @@ namespace ProjectAuto
 
             return panelMissingPart;
         }
+        #endregion
+
+        #region CreatePanelPart
 
         Panel CreatePanelPart(string name, string imagePath, string price)
         {
@@ -266,7 +281,7 @@ namespace ProjectAuto
             // labelNamePart
             // 
             this.labelNamePart.AutoSize = true;
-            this.labelNamePart.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F,System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelNamePart.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelNamePart.Location = new System.Drawing.Point(149, 14);
             this.labelNamePart.Name = "labelNamePart";
             this.labelNamePart.Size = new System.Drawing.Size(51, 20);
@@ -284,8 +299,9 @@ namespace ProjectAuto
 
             return panelPart;
         }
+        #endregion
 
-
+        #region CreateHeaderNoPrice
 
 
         void CreateHeaderNoPrice()
@@ -318,121 +334,8 @@ namespace ProjectAuto
             this.panelHeadrNoPrice.SuspendLayout();
         }
 
-        void InitView()
-        {
-
-            
-            //this.panelHeadrNoPrice.SuspendLayout();     
-            //this.panelHeadrNoPrice = new System.Windows.Forms.Panel();
-            //this.labelHeaderNoPrice = new System.Windows.Forms.Label();
-
-
-
-            //// 
-            //// panelPart
-            //// 
-            //this.panelPart.Controls.Add(this.pictureBoxImagePart);
-            //this.panelPart.Controls.Add(this.labelPrice);
-            //this.panelPart.Controls.Add(this.labelNamePart);
-            //this.panelPart.Location = new System.Drawing.Point(3, 266);
-            //this.panelPart.Name = "panelPart";
-            //this.panelPart.Size = new System.Drawing.Size(535, 120);
-            //this.panelPart.TabIndex = 2;
-            //// 
-            //// pictureBoxImagePart
-            //// 
-            //this.pictureBoxImagePart.Location = new System.Drawing.Point(6, 3);
-            //this.pictureBoxImagePart.Name = "pictureBoxImagePart";
-            //this.pictureBoxImagePart.Size = new System.Drawing.Size(121, 114);
-            //this.pictureBoxImagePart.TabIndex = 2;
-            //this.pictureBoxImagePart.TabStop = false;
-            //// 
-            //// labelPrice
-            //// 
-            //this.labelPrice.AutoSize = true;
-            //this.labelPrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            //this.labelPrice.Location = new System.Drawing.Point(438, 74);
-            //this.labelPrice.Name = "labelPrice";
-            //this.labelPrice.Size = new System.Drawing.Size(51, 20);
-            //this.labelPrice.TabIndex = 1;
-            //this.labelPrice.Text = "label3";
-            //// 
-            //// labelNamePart
-            //// 
-            //this.labelNamePart.AutoSize = true;
-            //this.labelNamePart.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            //this.labelNamePart.Location = new System.Drawing.Point(149, 14);
-            //this.labelNamePart.Name = "labelNamePart";
-            //this.labelNamePart.Size = new System.Drawing.Size(51, 20);
-            //this.labelNamePart.TabIndex = 0;
-            //this.labelNamePart.Text = "label3";
-
-            // 
-            // panelHeadrNoPrice
-            // 
-            //this.panelHeadrNoPrice.Controls.Add(this.labelHeaderNoPrice);
-            //this.panelHeadrNoPrice.Location = new System.Drawing.Point(3, 392);
-            //this.panelHeadrNoPrice.Name = "panelHeadrNoPrice";
-            //this.panelHeadrNoPrice.Size = new System.Drawing.Size(535, 23);
-            //this.panelHeadrNoPrice.TabIndex = 3;
-            //// 
-            //// labelHeaderNoPrice
-            //// 
-            //this.labelHeaderNoPrice.AutoSize = true;
-            //this.labelHeaderNoPrice.Location = new System.Drawing.Point(3, 0);
-            //this.labelHeaderNoPrice.Name = "labelHeaderNoPrice";
-            //this.labelHeaderNoPrice.Size = new System.Drawing.Size(175, 13);
-            //this.labelHeaderNoPrice.TabIndex = 0;
-            //this.labelHeaderNoPrice.Text = "Запчасти отсутствуют в продаже";
-            // 
-            //// panelMissingPart
-            //// 
-            //this.panelMissingPart.Controls.Add(this.labelCountProductNoPrice);
-            //this.panelMissingPart.Controls.Add(this.labelArticleNoPrice);
-            //this.panelMissingPart.Controls.Add(this.labelNameNoPrice);
-            //this.panelMissingPart.Location = new System.Drawing.Point(3, 421);
-            //this.panelMissingPart.Name = "panelMissingPart";
-            //this.panelMissingPart.Size = new System.Drawing.Size(535, 21);
-            //this.panelMissingPart.TabIndex = 4;
-            //// 
-            //// labelNameNoPrice
-            //// 
-            //this.labelNameNoPrice.AutoSize = true;
-            //this.labelNameNoPrice.Location = new System.Drawing.Point(10, 1);
-            //this.labelNameNoPrice.Name = "labelNameNoPrice";
-            //this.labelNameNoPrice.Size = new System.Drawing.Size(35, 13);
-            //this.labelNameNoPrice.TabIndex = 0;
-            //this.labelNameNoPrice.Text = "label2";
-            //// 
-            //// labelArticleNoPrice
-            //// 
-            //this.labelArticleNoPrice.AutoSize = true;
-            //this.labelArticleNoPrice.Location = new System.Drawing.Point(193, 1);
-            //this.labelArticleNoPrice.Name = "labelArticleNoPrice";
-            //this.labelArticleNoPrice.Size = new System.Drawing.Size(35, 13);
-            //this.labelArticleNoPrice.TabIndex = 1;
-            //this.labelArticleNoPrice.Text = "label2";
-            //// 
-            //// labelCountProductNoPrice
-            //// 
-            //this.labelCountProductNoPrice.AutoSize = true;
-            //this.labelCountProductNoPrice.Location = new System.Drawing.Point(454, 1);
-            //this.labelCountProductNoPrice.Name = "labelCountProductNoPrice";
-            //this.labelCountProductNoPrice.Size = new System.Drawing.Size(35, 13);
-            //this.labelCountProductNoPrice.TabIndex = 2;
-            //this.labelCountProductNoPrice.Text = "label2";
-            // 
-            // ItemsPatr
-            //  
-            //this.panelPart.ResumeLayout(false);
-            //this.panelPart.PerformLayout();
-            //((System.ComponentModel.ISupportInitialize)(this.pictureBoxImagePart)).EndInit();
-            //this.panelHeadrNoPrice.ResumeLayout(false);
-            //this.panelHeadrNoPrice.PerformLayout();
-
-
-        }
-
+        #endregion
+   
 
 
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
@@ -452,6 +355,9 @@ namespace ProjectAuto
         private System.Windows.Forms.Label labelCountProductNoPrice;
         private System.Windows.Forms.Label labelArticleNoPrice;
         private System.Windows.Forms.Label labelNameGoods;
+
+        #endregion
+
 
     }
 }

@@ -17,19 +17,35 @@ namespace ProjectAuto
         ConnectDB DB;
         Parser parser;
 
+        private TaskScheduler mContextUI;
+
         public Form2()
         {
             InitializeComponent();
             DB = new ConnectDB();
             parser = new Parser();
+
+            mContextUI = TaskScheduler.FromCurrentSynchronizationContext();
+            parser.parsEnd += Parser_parsEnd;
+            
+        }
+
+        private void Parser_parsEnd(string message)
+        {
+
+            Task.Factory.StartNew(() => this.richTextBox1.AppendText(message), CancellationToken.None, TaskCreationOptions.None, this.mContextUI);
+            //richTextBox1.AppendText(message);
         }
 
         #region ParsAutoCatalog
 
         void ParsAutoCatalog()
         {
-            //parser.ParsAutoCatalog();
+            parser.ParsAutoCatalog();
+            parser.ParsCategoryRepairPart();
+            parser.ParsLinkRepairs();
 
+            AddDataBase();
         }
         #endregion
 
@@ -41,11 +57,23 @@ namespace ProjectAuto
         void AddDataBase()
         {
 
-            //DB.SetAuto(parser.automobiles);
-            //DB.SetCatalogPart(parser.listCategoryPart);
-            //DB.SetRepairPart(parser.listRerairParts);
-            //DB.SetSubCategoryPart(parser.listSubCetegoryParts);
-            //DB.SetPartDescription(parser.listPartsDiscription);
+            DB.SetAuto(parser.automobiles);
+            DB.SetCatalogPart(parser.listCategoryPart);
+            DB.SetRepairPart(parser.listRerairParts);
+            DB.SetSubCategoryPart(parser.listSubCetegoryParts);
+            DB.SetPartDescription(parser.listPartsDiscription);
+            DB.SetPartDescription(parser.listPartsDiscription);
+
+            foreach (var part in parser.listPartsDiscription)
+            {
+                if (part.goodsParts.GetType() == typeof(List<GoodsPart>))
+                    DB.SetPartDescriptionInPrice(part.goodsParts);
+
+                if (part.missingParts.GetType() == typeof(List<MissingPart>))
+                    DB.SetPartDescriptionNoPrice(part.missingParts);
+
+                return;
+            }
         }
 
         #endregion
@@ -81,20 +109,6 @@ namespace ProjectAuto
         private void button2_Click(object sender, EventArgs e)
         {
 
-            parser.ParsLinkRepairs();
-
-            DB.SetPartDescription(parser.listPartsDiscription);
-
-            foreach (var part in parser.listPartsDiscription)
-            {
-                if (part.goodsParts.GetType() == typeof(List<GoodsPart>))
-                    DB.SetPartDescriptionInPrice(part.goodsParts);
-
-                if (part.missingParts.GetType() == typeof(List<MissingPart>))
-                    DB.SetPartDescriptionNoPrice(part.missingParts);
-
-                return;
-            }
 
             //foreach (var item in parser.automobiles)
             //{

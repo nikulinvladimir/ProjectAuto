@@ -13,12 +13,18 @@ using AngleSharp.Dom;
 using System.Threading;
 using System.Xml.XPath;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace ProjectAuto
 {
+
+    delegate void eventEnd(string message);
+
     class Parser
     {
-        ConnectDB connectDB = new ConnectDB(); 
+        public event eventEnd parsEnd;
+        
+        ConnectDB connectDB = new ConnectDB();
         const string SITEURL = "www.avtoall.ru";
         const string link = "https://www.avtoall.ru/catalog/paz-20/";
 
@@ -46,6 +52,8 @@ namespace ProjectAuto
             request.KeepAlive = true;
             request.UserAgent = Http.ChromeUserAgent();
             string response = request.Get(link).ToString();
+
+            //parsEnd?.Invoke($" End getPage {link}" + @"\");
 
             return response;
 
@@ -77,12 +85,11 @@ namespace ProjectAuto
                     imgPath = DownloadFile(item.QuerySelector("img").GetAttribute("src"), "imageAuto", item.QuerySelector(".model_item").TextContent),
                 });
             }
-            ParsCategoryRepairPart();
+
+            parsEnd?.Invoke("End ParsAutoCatalog");
         }
 
         #endregion
-
-
 
         // Парсинг всех ссылок на авто с автозапчастями
         #region ParsCategoryRepairPart
@@ -94,7 +101,6 @@ namespace ProjectAuto
         int idRepairPart = 0;
         public async void ParsCategoryRepairPart()
         {
-
             listCategoryPart = new List<CategoryPart>();
             listSubCetegoryParts = new List<SubCategoryParts>();
             listRerairParts = new List<RepairPart>();
@@ -176,11 +182,11 @@ namespace ProjectAuto
                 }
             }
 
-            ParsLinkRepairs();
-
+            parsEnd?.Invoke("End ParsCategoryRepairPart");
         }
 
         #endregion
+
 
         #region Pars Links Repairs parts
 
@@ -188,14 +194,14 @@ namespace ProjectAuto
         /// Парсит ссылки на каждую запчасть
         /// </summary>
         /// 
-       
-        public void ParsLinkRepairs()
-        {         
-                listPartsDiscription = new List<Part>();
-                test = new List<string>();
 
-                List<MissingPart> listMissingParts = new List<MissingPart>();
-                List<GoodsPart> goodsParts = new List<GoodsPart>();
+        public void ParsLinkRepairs()
+        {
+            listPartsDiscription = new List<Part>();
+            test = new List<string>();
+
+            List<MissingPart> listMissingParts = new List<MissingPart>();
+            List<GoodsPart> goodsParts = new List<GoodsPart>();
 
             int id = 0;
             int idPrice = 0;
@@ -205,73 +211,74 @@ namespace ProjectAuto
             {
 
                 //string response = GetPage("https://www.avtoall.ru/catalog/paz-20/avtobusy-36/paz_672m-393/obshiiy_vid_dvigatelya-43/");
-                    string response = GetPage(part.repairPartLink);
-                    HtmlParser htmlParser = new HtmlParser();
-                    var doc = htmlParser.ParseDocument(response);
+                string response = GetPage(part.repairPartLink);
+                HtmlParser htmlParser = new HtmlParser();
+                var doc = htmlParser.ParseDocument(response);
 
-                    foreach (var item in doc.DocumentElement.QuerySelectorAll("*body"))
+                foreach (var item in doc.DocumentElement.QuerySelectorAll("*body"))
+                {
+                    id++;
+
+                    var articlePart = item.QuerySelector(".part .number");
+                    var countGoods = item.QuerySelector(".part .count>span");
+                    var nameGoods = item.QuerySelector(".color-block>h1");
+                    var linkPictureScheme = item.QuerySelector("#picture_img").GetAttribute("src");
+
+                    foreach (var goods in doc.DocumentElement.QuerySelectorAll(".item"))
                     {
-                        id++;                       
-                        
-                        var articlePart = item.QuerySelector(".part .number");
-                        var countGoods = item.QuerySelector(".part .count>span");
-                        var nameGoods = item.QuerySelector(".color-block>h1");
-                        var linkPictureScheme = item.QuerySelector("#picture_img").GetAttribute("src");
+                        idPrice++;
 
-                        foreach (var goods in doc.DocumentElement.QuerySelectorAll(".item"))
+                        var linkImagePart = goods.QuerySelector(".image>a>img").GetAttribute("src");
+                        var namePart = goods.QuerySelector(".item-name");
+                        var price = goods.QuerySelector(".price-internet");
+
+                        goodsParts.Add(new GoodsPart
                         {
-                            idPrice++;
+                            id = idPrice,
+                            namePart = namePart.TextContent,
+                            linkImagePart = linkImagePart == null ? "\noImage.gif" : DownloadFile(linkImagePart, "partImage", namePart.TextContent),
+                            price = price == null ? "" : price.TextContent,
+                            parentId = id
 
-                            var linkImagePart = goods.QuerySelector(".image>a>img").GetAttribute("src");
-                            var namePart = goods.QuerySelector(".item-name");
-                            var price = goods.QuerySelector(".price-internet");
-
-                            goodsParts.Add(new GoodsPart
-                            {
-                                id = idPrice,
-                                namePart = namePart.TextContent,
-                                linkImagePart = linkImagePart == null ? "\noImage.gif" : DownloadFile(linkImagePart, "partImage",namePart.TextContent),
-                                price = price == null ? "" : price.TextContent,
-                                parentId = id
-                                
-                            });
-
-                        }
-
-                        foreach (var misPart in doc.DocumentElement.QuerySelectorAll(".parts.not-price .part"))
-                        {
-                            idNoPrice++;
-
-                            var article = misPart.QuerySelector(".part>.number");
-                            var namePart = misPart.QuerySelector(".part>.name");
-                            var count = misPart.QuerySelector(".part>.count");
-
-                            listMissingParts.Add(new MissingPart
-                            {
-                                id = idNoPrice,
-                                namePart = namePart.TextContent,
-                                articlePart = article.TextContent,
-                                productInStock = count.TextContent,
-                                parentId = id
-                            });
-                        }
-
-
-                        listPartsDiscription.Add(new Part
-                        {
-                            id = id,
-                            linkPictureScheme = DownloadFile(linkPictureScheme, "schemaImage",nameGoods.TextContent),
-                            missingParts = listMissingParts,
-                            countGoods = countGoods == null ? "" : countGoods.TextContent,
-                            articlePart = articlePart.TextContent,
-                            goodsParts = goodsParts,
-                            nameGoods = nameGoods.TextContent
-                            
                         });
 
                     }
-                
+
+                    foreach (var misPart in doc.DocumentElement.QuerySelectorAll(".parts.not-price .part"))
+                    {
+                        idNoPrice++;
+
+                        var article = misPart.QuerySelector(".part>.number");
+                        var namePart = misPart.QuerySelector(".part>.name");
+                        var count = misPart.QuerySelector(".part>.count");
+
+                        listMissingParts.Add(new MissingPart
+                        {
+                            id = idNoPrice,
+                            namePart = namePart.TextContent,
+                            articlePart = article.TextContent,
+                            productInStock = count.TextContent,
+                            parentId = id
+                        });
+                    }
+
+
+                    listPartsDiscription.Add(new Part
+                    {
+                        id = id,
+                        linkPictureScheme = DownloadFile(linkPictureScheme, "schemaImage", nameGoods.TextContent),
+                        missingParts = listMissingParts,
+                        countGoods = countGoods == null ? "" : countGoods.TextContent,
+                        articlePart = articlePart.TextContent,
+                        goodsParts = goodsParts,
+                        nameGoods = nameGoods.TextContent
+
+                    });
+
+                }
+
             }
+            parsEnd.Invoke("End ParsLinkRepairs");
         }
 
         #endregion
@@ -279,19 +286,25 @@ namespace ProjectAuto
         // загрузка картинки по ссылке
         #region DownloadFile
 
-        public string DownloadFile(string s,string path,string name)
+        public string DownloadFile(string s, string path, string name)
         {
+            string folder = $@"\{path}\";
 
-            string realPath = $@"\{path}\" + name.Remove(10,name.Length-10) + s.Remove(0, s.Length - 5); ;
+            string realPath = folder + name.Remove(10, name.Length - 10) + s.Remove(0, s.Length - 5); ;
 
             if (!IsUrlValid(s))
-                return $@"\{path}\noImage.gif";
+                return folder + "noImage.gif";
+
+            if (IsSave(realPath))
+                return realPath;
 
             WebClient client = new WebClient();
             client.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0";
             client.Headers["Accept-Encoding"] = "gzip, deflate, br";
             client.Headers["Accept"] = "image/webp,*/*";
             client.DownloadFileTaskAsync(new Uri(s), Environment.CurrentDirectory + realPath);
+
+            parsEnd.Invoke($"End download{realPath} " + @"\n");
 
             return realPath;
         }
@@ -301,8 +314,14 @@ namespace ProjectAuto
             return Regex.IsMatch(url, @"(http|https)://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?");
         }
 
+
+        bool IsSave(string nameImage)
+        {
+            return File.Exists(Environment.CurrentDirectory + nameImage);
+        }
+
         #endregion
-
-
+ 
+        
     }
 }
