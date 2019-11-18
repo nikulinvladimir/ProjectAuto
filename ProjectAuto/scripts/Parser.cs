@@ -281,10 +281,11 @@ namespace ProjectAuto
 
         public string DownloadFile(string s,string path,string name)
         {
+
             string realPath = $@"\{path}\" + name.Remove(10,name.Length-10) + s.Remove(0, s.Length - 5); ;
 
             if (!IsUrlValid(s))
-                return Environment.CurrentDirectory;
+                return $@"\{path}\noImage.gif";
 
             WebClient client = new WebClient();
             client.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0";

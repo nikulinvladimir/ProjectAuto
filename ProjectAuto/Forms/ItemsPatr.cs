@@ -52,7 +52,7 @@ namespace ProjectAuto
                 CreatePanelPart(item.namePart,item.linkImagePart,item.price);
             }
 
-            createHeaderNoPrice();
+            CreateHeaderNoPrice();
 
             foreach (var item in listNoPrice)
             {
@@ -83,8 +83,7 @@ namespace ProjectAuto
             // 
             this.flowLayoutPanel1.AutoScroll = true;
             this.flowLayoutPanel1.Controls.Add(this.panelImage);
-            this.flowLayoutPanel1.Controls.Add(this.panelHeaderGoods);
-            this.flowLayoutPanel1.Controls.Add(this.panelHeadrNoPrice); 
+            this.flowLayoutPanel1.Controls.Add(this.panelHeaderGoods); 
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -163,8 +162,8 @@ namespace ProjectAuto
             this.panelHeaderGoods.ResumeLayout(false);
             this.panelHeaderGoods.PerformLayout();
 
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
         }
-
 
         Panel CreatePanelNoPrice(string name,string article,string countProd)
         {
@@ -198,7 +197,7 @@ namespace ProjectAuto
             // labelArticleNoPrice
             // 
             this.labelArticleNoPrice.AutoSize = true;
-            this.labelArticleNoPrice.Location = new System.Drawing.Point(193, 1);
+            this.labelArticleNoPrice.Location = new System.Drawing.Point(340, 1);
             this.labelArticleNoPrice.Name = "labelArticleNoPrice";
             this.labelArticleNoPrice.Size = new System.Drawing.Size(35, 13);
             this.labelArticleNoPrice.TabIndex = 1;
@@ -207,7 +206,7 @@ namespace ProjectAuto
             // labelCountProductNoPrice
             // 
             this.labelCountProductNoPrice.AutoSize = true;
-            this.labelCountProductNoPrice.Location = new System.Drawing.Point(454, 1);
+            this.labelCountProductNoPrice.Location = new System.Drawing.Point(400, -5);
             this.labelCountProductNoPrice.Name = "labelCountProductNoPrice";
             this.labelCountProductNoPrice.Size = new System.Drawing.Size(35, 13);
             this.labelCountProductNoPrice.TabIndex = 2;
@@ -267,11 +266,12 @@ namespace ProjectAuto
             // labelNamePart
             // 
             this.labelNamePart.AutoSize = true;
-            this.labelNamePart.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelNamePart.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F,System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelNamePart.Location = new System.Drawing.Point(149, 14);
             this.labelNamePart.Name = "labelNamePart";
             this.labelNamePart.Size = new System.Drawing.Size(51, 20);
             this.labelNamePart.TabIndex = 0;
+            this.labelNamePart.MaximumSize = new Size(200, 50);
             this.labelNamePart.Text = name;
 
 
@@ -288,10 +288,13 @@ namespace ProjectAuto
 
 
 
-        void createHeaderNoPrice()
+        void CreateHeaderNoPrice()
         {
+
             this.panelHeadrNoPrice = new System.Windows.Forms.Panel();
             this.labelHeaderNoPrice = new System.Windows.Forms.Label();
+
+            this.flowLayoutPanel1.Controls.Add(this.panelHeadrNoPrice);
 
             this.panelHeadrNoPrice.Controls.Add(this.labelHeaderNoPrice);
             this.panelHeadrNoPrice.Location = new System.Drawing.Point(3, 392);
@@ -301,12 +304,15 @@ namespace ProjectAuto
             // 
             // labelHeaderNoPrice
             // 
+            this.labelHeaderNoPrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelHeaderNoPrice.AutoSize = true;
             this.labelHeaderNoPrice.Location = new System.Drawing.Point(3, 0);
             this.labelHeaderNoPrice.Name = "labelHeaderNoPrice";
             this.labelHeaderNoPrice.Size = new System.Drawing.Size(175, 13);
             this.labelHeaderNoPrice.TabIndex = 0;
             this.labelHeaderNoPrice.Text = "Запчасти отсутствуют в продаже";
+
+
             this.panelHeadrNoPrice.ResumeLayout(false);
             this.panelHeadrNoPrice.PerformLayout();
             this.panelHeadrNoPrice.SuspendLayout();

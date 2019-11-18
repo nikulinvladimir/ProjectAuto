@@ -200,6 +200,8 @@ namespace ProjectAuto
             this.button1.UseVisualStyleBackColor = true;
             button1.Click += Button1_Click;
 
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+
         }
 
         private void Button1_Click(object sender, EventArgs e)

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             //this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             //this.panel1 = new System.Windows.Forms.Panel();
             //this.labelModel = new System.Windows.Forms.Label();

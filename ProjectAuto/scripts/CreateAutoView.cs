@@ -182,8 +182,6 @@ namespace ProjectAuto
                 ((System.ComponentModel.ISupportInitialize)(this.pictureBox0)).EndInit();
                 viewAuto.ResumeLayout(false);
 
-
-
             }
         }      
 
